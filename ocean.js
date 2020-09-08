@@ -1,7 +1,3 @@
-// const qCaptcha = require('@questnetwork/quest-image-captcha-js');
-//
-// const axios = require('axios');
-// const CryptoJS = require('crypto-js')
 import * as Ipfs from 'ipfs';
 const { v4: uuidv4 } = require('uuid');
 import { Subject } from "rxjs";
@@ -9,26 +5,25 @@ import { DolphinInstance }  from '@questnetwork/quest-dolphin-js';
 
 export class Ocean {
     constructor() {
-      //in the future only handle one channel per instanciated class
-      // this.ipfsCID = "";
-      // this.subs = {};
-      // this.channelParticipantList = {};
-      // this.channelKeyChain = {};
-      // this.channelNameList = [];
-      // this.splitter = "-----";
-      // this.channelHistory = {};
       let uVar;
       this.ipfsId = uVar;
-      // this.pubSubPeersSub = new Subject();
-      // this.DEVMODE = false;
-      // this.captchaCode = {};
-      // this.captchaRetries = {};
-      // this.commitNowSub = new Subject();
-      // this.inviteCodes = {};
+      this.ipfsNodeReady = false;
+      this.ipfsNodeReadySub = new Subject();
+      this.oceanIsReady = false;
       this.ipfsNode = uVar;
       this.dolphin = uVar;
       this.swarmPeersSub = new Subject();
     }
+
+
+    delay(t, val = "") {
+       return new Promise(function(resolve) {
+           setTimeout(function() {
+               resolve(val);
+           }, t);
+       });
+    }
+
 
     async start(config){
       console.log("Waiting for IPFS...");
@@ -67,10 +62,13 @@ export class Ocean {
         //check peers
         console.log('Checking for peers...');
         await this.getPeers()
-        await this.ui.delay(2000);
+        await this.delay(2000);
       }
 
       this.dolphin = new DolphinInstance(this.ipfsNode);
+      this.dolphin.setIpfsId(this.ipfsId);
+      this.oceanIsReady = true;
+
 
       return true;
     }
@@ -91,9 +89,12 @@ export class Ocean {
       return false;
     }
 
-    ipfsNodeReady = false;
-    ipfsNodeReadySub = new Subject<any>();
-    setIpfsNodeReady(value: boolean) {
+    isReady(){
+      return this.oceanIsReady;
+    }
+
+
+    setIpfsNodeReady(value) {
       this.ipfsNodeReady = value;
       this.ipfsNodeReadySub.next(true);
       // localStorage.setItem('isLoggedIn', value ? "true" : "false");
@@ -101,7 +102,6 @@ export class Ocean {
     getIpfsNodeReady(){
       return ipfsNodeReady;
     }
-
 
     isInArray(value, array) {
      return array.indexOf(value) > -1;
