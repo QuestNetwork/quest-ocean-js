@@ -13,9 +13,6 @@ export class Ocean {
       this.ipfsNode = uVar;
       this.dolphin = uVar;
       this.swarmPeersSub = new Subject();
-
-
-
     }
 
 
