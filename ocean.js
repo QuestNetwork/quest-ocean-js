@@ -15,7 +15,6 @@ export class Ocean {
       this.swarmPeersSub = new Subject();
     }
 
-
     delay(t, val = "") {
        return new Promise(function(resolve) {
            setTimeout(function() {
@@ -66,6 +65,7 @@ export class Ocean {
 
       this.dolphin = new DolphinInstance(this.ipfsNode);
       this.dolphin.setIpfsId(this.ipfsId);
+
       this.oceanIsReady = true;
 
       setInterval( () => {
@@ -108,5 +108,20 @@ export class Ocean {
     isInArray(value, array) {
      return array.indexOf(value) > -1;
    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   }
