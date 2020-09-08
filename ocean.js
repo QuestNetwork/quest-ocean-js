@@ -24,7 +24,6 @@ export class Ocean {
        });
     }
 
-
     async create(config){
       console.log("Waiting for IPFS...");
       try{
