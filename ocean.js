@@ -13,6 +13,9 @@ export class Ocean {
       this.ipfsNode = uVar;
       this.dolphin = uVar;
       this.swarmPeersSub = new Subject();
+
+
+
     }
 
 
@@ -25,7 +28,7 @@ export class Ocean {
     }
 
 
-    async start(config){
+    async create(config){
       console.log("Waiting for IPFS...");
       try{
         let repoId = uuidv4();
@@ -69,6 +72,9 @@ export class Ocean {
       this.dolphin.setIpfsId(this.ipfsId);
       this.oceanIsReady = true;
 
+      setInterval( () => {
+        this.getPeers();
+      },30000);
 
       return true;
     }
