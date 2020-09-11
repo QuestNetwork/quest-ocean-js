@@ -44,7 +44,7 @@ export class Ocean {
           let fileSwarm = this.fs.readFileSync(configPath).toString('utf8');
           console.log('Ocean:',fileSwarm);
           let swarm;
-          if(typeof filePeers == 'string'){
+          if(typeof fileSwarm == 'string'){
             swarm = JSON.parse(fileSwarm);
           }
           else{
@@ -52,11 +52,16 @@ export class Ocean {
           }
           console.log('Ocean: Loaded swarm from disk');
           console.log(swarm);
+          console.log(swarm);
           config['ipfs']['swarm'] = swarm['swarm'];
         }catch(e){console.log(e);}
       }
 
       console.log("Waiting for IPFS...");
+      if(typeof config['ipfs']['swarm'] == 'undefinded' || config['ipfs']['swarm'].length == 0){
+        throw('Ocean: No IPFS Swarm Peers Configured');
+      }
+
       try{
         let repoId = uuidv4();
         // let repoId = uuidv4();
