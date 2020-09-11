@@ -12,7 +12,12 @@ export class Ocean {
       this.oceanIsReady = false;
       this.ipfsNode = uVar;
       this.dolphin = uVar;
+      this.electronService = uVar;
       this.swarmPeersSub = new Subject();
+      this.fs = uVar;
+      this.isElectron = false;
+      this.configPath = uVar;
+      this.configFilePath = uVar;
     }
 
     delay(t, val = "") {
@@ -24,6 +29,33 @@ export class Ocean {
     }
 
     async create(config){
+      this.electronService = config['dependencies']['electronService'];
+      var userAgent = navigator.userAgent.toLowerCase();
+      if (userAgent.indexOf(' electron/') > -1) {
+        this.isElectron = true;
+        this.fs = this.electronService.remote.require('fs');
+        this.configPath = this.electronService.remote.app.getPath('userData');
+        this.configFilePath = this.configPath  + "/user.qcprofile";
+      }
+
+      if(this.isElectron){
+        try{
+          let configPath = this.configPath + "/swarm.peers";
+          let fileSwarm = this.fs.readFileSync(configPath).toString('utf8');
+          console.log('Ocean:',fileSwarm);
+          let swarm;
+          if(typeof filePeers == 'string'){
+            swarm = JSON.parse(fileSwarm);
+          }
+          else{
+            swarm = fileSwarm;
+          }
+          console.log('Ocean: Loaded swarm from disk');
+          console.log(swarm);
+          config['ipfs']['swarm'] = swarm['swarm'];
+        }catch(e){console.log(e);}
+      }
+
       console.log("Waiting for IPFS...");
       try{
         let repoId = uuidv4();
@@ -41,7 +73,7 @@ export class Ocean {
              pubsub: true
            }
         }};
-
+        console.log(ipfsEmptyConfig);
         this.ipfsNode = await Ipfs.create(ipfsEmptyConfig);
         const version = await this.ipfsNode.version();
         console.log("IPFS v"+version.version+" created!");
@@ -49,9 +81,12 @@ export class Ocean {
         this.ipfsId = await this.ipfsNode.id();
         console.log("Our IPFS ID is:"+this.ipfsId.id);
       }catch(error){
+
         console.log("couldn't start IPFS");
-        console.warn(error);
-        throw('IPFS Fail');
+        console.warn(error.message);
+        if(error.message == 'Transport (WebRTCStar) could not listen on any available address'){
+          throw(error.message);
+        }
       }
 
       console.log('About to check...');
