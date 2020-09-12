@@ -1,7 +1,3 @@
-// const qCaptcha = require('@questnetwork/quest-image-captcha-js');
-//
-// const axios = require('axios');
-// const CryptoJS = require('crypto-js')
 import * as Ipfs from 'ipfs';
 const { v4: uuidv4 } = require('uuid');
 import { Subject } from "rxjs";
@@ -9,29 +5,36 @@ import { DolphinInstance }  from '@questnetwork/quest-dolphin-js';
 
 export class Ocean {
     constructor() {
-      //in the future only handle one channel per instanciated class
-      // this.ipfsCID = "";
-      // this.subs = {};
-      // this.channelParticipantList = {};
-      // this.channelKeyChain = {};
-      // this.channelNameList = [];
-      // this.splitter = "-----";
-      // this.channelHistory = {};
       let uVar;
       this.ipfsId = uVar;
-      // this.pubSubPeersSub = new Subject();
-      // this.DEVMODE = false;
-      // this.captchaCode = {};
-      // this.captchaRetries = {};
-      // this.commitNowSub = new Subject();
-      // this.inviteCodes = {};
+      this.ipfsNodeReady = false;
+      this.ipfsNodeReadySub = new Subject();
+      this.oceanIsReady = false;
       this.ipfsNode = uVar;
       this.dolphin = uVar;
+      this.electronService = uVar;
       this.swarmPeersSub = new Subject();
+      this.fs = uVar;
+      this.isElectron = false;
+      this.configPath = uVar;
+      this.configFilePath = uVar;
     }
 
-    async start(config){
+    delay(t, val = "") {
+       return new Promise(function(resolve) {
+           setTimeout(function() {
+               resolve(val);
+           }, t);
+       });
+    }
+
+    async create(config){
+    
       console.log("Waiting for IPFS...");
+      if(typeof config['ipfs']['swarm'] == 'undefinded' || config['ipfs']['swarm'].length == 0){
+        throw('Ocean: No IPFS Swarm Peers Configured');
+      }
+
       try{
         let repoId = uuidv4();
         // let repoId = uuidv4();
@@ -48,7 +51,7 @@ export class Ocean {
              pubsub: true
            }
         }};
-
+        console.log(ipfsEmptyConfig);
         this.ipfsNode = await Ipfs.create(ipfsEmptyConfig);
         const version = await this.ipfsNode.version();
         console.log("IPFS v"+version.version+" created!");
@@ -56,9 +59,12 @@ export class Ocean {
         this.ipfsId = await this.ipfsNode.id();
         console.log("Our IPFS ID is:"+this.ipfsId.id);
       }catch(error){
+
         console.log("couldn't start IPFS");
-        console.warn(error);
-        throw('IPFS Fail');
+        console.warn(error.message);
+        if(error.message == 'Transport (WebRTCStar) could not listen on any available address'){
+          throw(error.message);
+        }
       }
 
       console.log('About to check...');
@@ -67,10 +73,17 @@ export class Ocean {
         //check peers
         console.log('Checking for peers...');
         await this.getPeers()
-        await this.ui.delay(2000);
+        await this.delay(2000);
       }
 
       this.dolphin = new DolphinInstance(this.ipfsNode);
+      this.dolphin.setIpfsId(this.ipfsId);
+
+      this.oceanIsReady = true;
+
+      setInterval( () => {
+        this.getPeers();
+      },30000);
 
       return true;
     }
@@ -91,9 +104,12 @@ export class Ocean {
       return false;
     }
 
-    ipfsNodeReady = false;
-    ipfsNodeReadySub = new Subject<any>();
-    setIpfsNodeReady(value: boolean) {
+    isReady(){
+      return this.oceanIsReady;
+    }
+
+
+    setIpfsNodeReady(value) {
       this.ipfsNodeReady = value;
       this.ipfsNodeReadySub.next(true);
       // localStorage.setItem('isLoggedIn', value ? "true" : "false");
@@ -102,9 +118,23 @@ export class Ocean {
       return ipfsNodeReady;
     }
 
-
     isInArray(value, array) {
      return array.indexOf(value) > -1;
    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   }
