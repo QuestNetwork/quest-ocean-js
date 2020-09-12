@@ -29,34 +29,7 @@ export class Ocean {
     }
 
     async create(config){
-      this.electronService = config['dependencies']['electronService'];
-      var userAgent = navigator.userAgent.toLowerCase();
-      if (userAgent.indexOf(' electron/') > -1) {
-        this.isElectron = true;
-        this.fs = this.electronService.remote.require('fs');
-        this.configPath = this.electronService.remote.app.getPath('userData');
-        this.configFilePath = this.configPath  + "/user.qcprofile";
-      }
-
-      if(this.isElectron){
-        try{
-          let configPath = this.configPath + "/swarm.peers";
-          let fileSwarm = this.fs.readFileSync(configPath).toString('utf8');
-          console.log('Ocean:',fileSwarm);
-          let swarm;
-          if(typeof fileSwarm == 'string'){
-            swarm = JSON.parse(fileSwarm);
-          }
-          else{
-            swarm = fileSwarm;
-          }
-          console.log('Ocean: Loaded swarm from disk');
-          console.log(swarm);
-          console.log(swarm);
-          config['ipfs']['swarm'] = swarm['swarm'];
-        }catch(e){console.log(e);}
-      }
-
+    
       console.log("Waiting for IPFS...");
       if(typeof config['ipfs']['swarm'] == 'undefinded' || config['ipfs']['swarm'].length == 0){
         throw('Ocean: No IPFS Swarm Peers Configured');
