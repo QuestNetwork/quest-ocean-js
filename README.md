@@ -7,7 +7,7 @@
 
 ## Description
 
-Unified API for the QuestNetwork dStack.
+Unified API for PubSub Processes on the QuestNetwork dStack.
 
 ## Installation & Usage
 
