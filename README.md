@@ -7,7 +7,7 @@
 
 ## Description
 
-Unified API for PubSub Processes on the QuestNetwork dStack, like [Quest Dolphin JS](https://github.com/quest-dolphin-js).
+Unified API for decentralized processes on the QuestNetwork dStack, like [Quest Dolphin JS](https://github.com/quest-dolphin-js) and [Quest Coral JS](https://github.com/quest-coral-js) for IPFS.
 
 ## Installation & Usage
 
