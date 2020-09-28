@@ -15,7 +15,6 @@ export class Ocean {
       this.electronService = uVar;
       this.swarmPeersSub = new Subject();
       this.fs = uVar;
-      this.isElectron = false;
       this.configPath = uVar;
       this.configFilePath = uVar;
     }
@@ -29,23 +28,39 @@ export class Ocean {
     }
 
     async create(config){
-    
+
       console.log("Waiting for IPFS...");
-      if(typeof config['ipfs']['swarm'] == 'undefinded' || config['ipfs']['swarm'].length == 0){
+      if(typeof config['ipfs']['Swarm'] == 'undefinded' || config['ipfs']['Swarm'].length == 0){
         throw('Ocean: No IPFS Swarm Peers Configured');
       }
 
       try{
         let repoId = uuidv4();
         // let repoId = uuidv4();
+        let repo = "";
+        if(config['ipfs']['repo'] !== 'undefined'){
+           repo = config['ipfs']['repo'];
+        }
+        else { repo = 'anoon-repo-'+repoId; }
+
+        let api = "";
+        if(config['ipfs']['API'] !== 'undefined'){
+           api = config['ipfs']['API'];
+        }
+
+        let gateway = "";
+        if(config['ipfs']['Gateway'] !== 'undefined'){
+           api = config['ipfs']['Gateway'];
+        }
+
 
         let ipfsEmptyConfig = {
-        repo: 'anoon-repo-'+repoId,
+        repo: repo,
         config: {
           Addresses: {
-            Swarm: config['ipfs']['swarm'],
-            API: '',
-            Gateway: ''
+            Swarm: config['ipfs']['Swarm'],
+            API: config['ipfs']['API'],
+            Gateway: config['ipfs']['Gateway'],
           },
         EXPERIMENTAL: {
              pubsub: true
