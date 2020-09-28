@@ -30,7 +30,7 @@ export class Ocean {
     async create(config){
 
       console.log("Waiting for IPFS...");
-      if(typeof config['ipfs']['Swarm'] == 'undefinded' || config['ipfs']['Swarm'].length == 0){
+      if(typeof config['ipfs']['Swarm'] == 'undefined' || config['ipfs']['Swarm'].length == 0){
         throw('Ocean: No IPFS Swarm Peers Configured');
       }
 
