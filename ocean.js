@@ -38,18 +38,18 @@ export class Ocean {
         let repoId = uuidv4();
         // let repoId = uuidv4();
         let repo = "";
-        if(config['ipfs']['repo'] !== 'undefined'){
+        if(config['ipfs']['repo'] != 'undefined'){
            repo = config['ipfs']['repo'];
         }
         else { repo = 'anoon-repo-'+repoId; }
 
         let api = "";
-        if(config['ipfs']['API'] !== 'undefined'){
+        if(config['ipfs']['API'] != 'undefined'){
            api = config['ipfs']['API'];
         }
 
         let gateway = "";
-        if(config['ipfs']['Gateway'] !== 'undefined'){
+        if(config['ipfs']['Gateway'] != 'undefined'){
            api = config['ipfs']['Gateway'];
         }
 
