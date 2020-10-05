@@ -60,7 +60,7 @@ export class Ocean {
            bootstrap = config['ipfs']['Bootstrap'];
         }
 
-        let swarm: [];
+        let swarm = [];
         if(typeof config['ipfs']['Swarm'] != 'undefined'){
            swarm = config['ipfs']['Swarm'];
         }
