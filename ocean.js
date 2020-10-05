@@ -45,42 +45,35 @@ export class Ocean {
           repo = 'anoon-repo-'+repoId;
         }
 
-        let api = "";
-        if(typeof config['ipfs']['API'] != 'undefined'){
-           api = config['ipfs']['API'];
-        }
-
-        let gateway = "";
-        if(typeof config['ipfs']['Gateway'] != 'undefined'){
-           gateway = config['ipfs']['Gateway'];
-        }
-
-        let bootstrap = [];
-        if(typeof config['ipfs']['Bootstrap'] != 'undefined'){
-           bootstrap = config['ipfs']['Bootstrap'];
-        }
-
-        let swarm = [];
-        if(typeof config['ipfs']['Swarm'] != 'undefined'){
-           swarm = config['ipfs']['Swarm'];
-        }
-
 
 
         let ipfsEmptyConfig = {
         repo: repo,
         config: {
-          Bootstrap: bootstrap,
-          Swarm: swarm,
-          Addresses: {
-            Swarm: config['ipfs']['Swarm'],
-            API: api,
-            Gateway: gateway,
-          },
+          Addresses: {},
         EXPERIMENTAL: {
              pubsub: true
            }
         }};
+
+
+        if(typeof config['ipfs']['API'] != 'undefined'){
+           ipfsEmptyConfig['config']['Addresses']['API'] = config['ipfs']['API'];
+        }
+
+        if(typeof config['ipfs']['Gateway'] != 'undefined'){
+            ipfsEmptyConfig['config']['Addresses']['Gateway'] = config['ipfs']['Gateway'];
+        }
+
+        if(typeof config['ipfs']['Bootstrap'] != 'undefined'){
+          ipfsEmptyConfig['config']['Bootstrap'] = config['ipfs']['Bootstrap'];
+        }
+      
+        if(typeof config['ipfs']['Swarm'] != 'undefined'){
+           ipfsEmptyConfig['config']['Addresses']['Swarm'] = config['ipfs']['Swarm'];
+        }
+
+
         console.log(ipfsEmptyConfig);
         this.ipfsNode = await Ipfs.create(ipfsEmptyConfig);
         const version = await this.ipfsNode.version();
