@@ -52,17 +52,30 @@ export class Ocean {
 
         let gateway = "";
         if(typeof config['ipfs']['Gateway'] != 'undefined'){
-           api = config['ipfs']['Gateway'];
+           gateway = config['ipfs']['Gateway'];
         }
+
+        let bootstrap = [];
+        if(typeof config['ipfs']['Bootstrap'] != 'undefined'){
+           bootstrap = config['ipfs']['Bootstrap'];
+        }
+
+        let swarm: [];
+        if(typeof config['ipfs']['Swarm'] != 'undefined'){
+           swarm = config['ipfs']['Swarm'];
+        }
+
 
 
         let ipfsEmptyConfig = {
         repo: repo,
         config: {
+          Bootstrap: bootstrap,
+          Swarm: swarm,
           Addresses: {
             Swarm: config['ipfs']['Swarm'],
-            API: config['ipfs']['API'],
-            Gateway: config['ipfs']['Gateway'],
+            API: api,
+            Gateway: gateway,
           },
         EXPERIMENTAL: {
              pubsub: true
