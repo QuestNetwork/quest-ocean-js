@@ -2,6 +2,8 @@ import * as Ipfs from 'ipfs';
 const { v4: uuidv4 } = require('uuid');
 import { Subject } from "rxjs";
 import { DolphinInstance }  from '@questnetwork/quest-dolphin-js';
+import { CoralInstance }  from '@questnetwork/quest-coral-js';
+
 
 export class Ocean {
     constructor() {
@@ -17,6 +19,7 @@ export class Ocean {
       this.fs = uVar;
       this.configPath = uVar;
       this.configFilePath = uVar;
+      this.coral = uVar;
     }
 
     delay(t, val = "") {
@@ -68,7 +71,7 @@ export class Ocean {
         if(typeof config['ipfs']['Bootstrap'] != 'undefined'){
           ipfsEmptyConfig['config']['Bootstrap'] = config['ipfs']['Bootstrap'];
         }
-      
+
         if(typeof config['ipfs']['Swarm'] != 'undefined'){
            ipfsEmptyConfig['config']['Addresses']['Swarm'] = config['ipfs']['Swarm'];
         }
@@ -101,6 +104,9 @@ export class Ocean {
 
       this.dolphin = new DolphinInstance(this.ipfsNode);
       this.dolphin.setIpfsId(this.ipfsId);
+
+      this.coral = new CoralInstance(this.ipfsNode);
+
 
       this.oceanIsReady = true;
 

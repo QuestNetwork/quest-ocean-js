@@ -15,6 +15,7 @@
     },
   "dependencies": {
     "@questnetwork/quest-dolphin-js": "../quest-dolphin-js",
+    "@questnetwork/quest-coral-js": "../quest-coral-js",
     "ipfs": "^0.50.1",
     "rxjs": "6.6.3",
     "uuid": "^8.2.0"
