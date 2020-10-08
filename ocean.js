@@ -20,6 +20,7 @@ export class Ocean {
       this.configPath = uVar;
       this.configFilePath = uVar;
       this.coral = uVar;
+      this.bee = uVar;
     }
 
     delay(t, val = "") {
@@ -32,6 +33,8 @@ export class Ocean {
 
     async create(config){
 
+      this.bee = config['dependencies']['bee'];
+
       console.log("Waiting for IPFS...");
       if(typeof config['ipfs']['Swarm'] == 'undefined' || config['ipfs']['Swarm'].length == 0){
         throw('Ocean: No IPFS Swarm Peers Configured');
@@ -41,23 +44,21 @@ export class Ocean {
         let repoId = uuidv4();
         // let repoId = uuidv4();
         let repo = "";
-        if(typeof config['ipfs']['repo'] != 'undefined'){
-           repo = config['ipfs']['repo'];
+        if(typeof config['ipfs']['repo'] == 'undefined'){
+          config['ipfs']['repo'] = 'anoon-repo-'+repoId;
         }
-        else {
-          repo = 'anoon-repo-'+repoId;
-        }
-
-
 
         let ipfsEmptyConfig = {
-        repo: repo,
         config: {
           Addresses: {},
-        EXPERIMENTAL: {
+          EXPERIMENTAL: {
              pubsub: true
            }
         }};
+
+        if(typeof config['ipfs']['repo'] != 'undefined'){
+           ipfsEmptyConfig['config']['repo'] = config['ipfs']['repo'];
+        }
 
 
         if(typeof config['ipfs']['API'] != 'undefined'){
@@ -91,6 +92,8 @@ export class Ocean {
         if(error.message == 'Transport (WebRTCStar) could not listen on any available address'){
           throw(error.message);
         }
+
+        return config;
       }
 
       console.log('About to check...');
