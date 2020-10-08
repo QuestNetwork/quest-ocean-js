@@ -109,6 +109,7 @@ export class Ocean {
       this.dolphin.setIpfsId(this.ipfsId);
 
       this.coral = new CoralInstance(this.ipfsNode);
+      this.coral.start(config);
 
 
       this.oceanIsReady = true;
