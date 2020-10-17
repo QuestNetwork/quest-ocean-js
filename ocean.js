@@ -2,6 +2,8 @@ import * as Ipfs from 'ipfs';
 const { v4: uuidv4 } = require('uuid');
 import { Subject } from "rxjs";
 import { DolphinInstance }  from '@questnetwork/quest-dolphin-js';
+import { CoralInstance }  from '@questnetwork/quest-coral-js';
+
 
 export class Ocean {
     constructor() {
@@ -15,9 +17,10 @@ export class Ocean {
       this.electronService = uVar;
       this.swarmPeersSub = new Subject();
       this.fs = uVar;
-      this.isElectron = false;
       this.configPath = uVar;
       this.configFilePath = uVar;
+      this.coral = uVar;
+      this.bee = uVar;
     }
 
     delay(t, val = "") {
@@ -29,28 +32,52 @@ export class Ocean {
     }
 
     async create(config){
-    
+
+      this.bee = config['dependencies']['bee'];
+
       console.log("Waiting for IPFS...");
-      if(typeof config['ipfs']['swarm'] == 'undefinded' || config['ipfs']['swarm'].length == 0){
+      if(typeof config['ipfs']['Swarm'] == 'undefined' || config['ipfs']['Swarm'].length == 0){
         throw('Ocean: No IPFS Swarm Peers Configured');
       }
 
       try{
         let repoId = uuidv4();
         // let repoId = uuidv4();
+        let repo = "";
+        if(typeof config['ipfs']['repo'] == 'undefined'){
+          config['ipfs']['repo'] = 'anoon-repo-'+repoId;
+        }
 
         let ipfsEmptyConfig = {
-        repo: 'anoon-repo-'+repoId,
         config: {
-          Addresses: {
-            Swarm: config['ipfs']['swarm'],
-            API: '',
-            Gateway: ''
-          },
-        EXPERIMENTAL: {
+          Addresses: {},
+          EXPERIMENTAL: {
              pubsub: true
            }
         }};
+
+        if(typeof config['ipfs']['repo'] != 'undefined'){
+           ipfsEmptyConfig['config']['repo'] = config['ipfs']['repo'];
+        }
+
+
+        if(typeof config['ipfs']['API'] != 'undefined'){
+           ipfsEmptyConfig['config']['Addresses']['API'] = config['ipfs']['API'];
+        }
+
+        if(typeof config['ipfs']['Gateway'] != 'undefined'){
+            ipfsEmptyConfig['config']['Addresses']['Gateway'] = config['ipfs']['Gateway'];
+        }
+
+        if(typeof config['ipfs']['Bootstrap'] != 'undefined'){
+          ipfsEmptyConfig['config']['Bootstrap'] = config['ipfs']['Bootstrap'];
+        }
+
+        if(typeof config['ipfs']['Swarm'] != 'undefined'){
+           ipfsEmptyConfig['config']['Addresses']['Swarm'] = config['ipfs']['Swarm'];
+        }
+
+
         console.log(ipfsEmptyConfig);
         this.ipfsNode = await Ipfs.create(ipfsEmptyConfig);
         const version = await this.ipfsNode.version();
@@ -65,6 +92,8 @@ export class Ocean {
         if(error.message == 'Transport (WebRTCStar) could not listen on any available address'){
           throw(error.message);
         }
+
+        return config;
       }
 
       console.log('About to check...');
@@ -78,6 +107,10 @@ export class Ocean {
 
       this.dolphin = new DolphinInstance(this.ipfsNode);
       this.dolphin.setIpfsId(this.ipfsId);
+
+      this.coral = new CoralInstance(this.ipfsNode);
+      this.coral.start(config);
+
 
       this.oceanIsReady = true;
 
@@ -117,12 +150,6 @@ export class Ocean {
     getIpfsNodeReady(){
       return ipfsNodeReady;
     }
-
-    isInArray(value, array) {
-     return array.indexOf(value) > -1;
-   }
-
-
 
 
 
