@@ -14,8 +14,8 @@
     "build": "rm -rf dist && babel . --out-dir dist/ --ignore ./node_modules,./.babelrc,./package.json,./npm-debug.log --copy-files"
     },
   "dependencies": {
-    "@questnetwork/quest-dolphin-js": "../quest-dolphin-js",
-    "@questnetwork/quest-coral-js": "../quest-coral-js",
+    "@questnetwork/quest-dolphin-js": "^0.9.4",
+    "@questnetwork/quest-coral-js": "^0.9.4,
     "ipfs": "^0.50.1",
     "rxjs": "6.5.5",
     "uuid": "8.3.0"
