@@ -1,5 +1,5 @@
 # Quest Ocean JS
->Quantum Scare: Currently Quest Network PubSub Protocol uses elliptic curve cryptopgraphy for signatures, but we are already looking at post quantum algorithms.
+>Quantum Scare: Currently Quest Network PubSub Protocol uses elliptic curve cryptography for signatures, but we are already looking at post quantum algorithms.
 
 ## Lead Maintainer
 
@@ -23,13 +23,13 @@ Pro Tip: Put a file in your `/bin` that runs the quest-cli like so `node /path/t
 - [Quest Dolphin Process](https://github.com/QuestNetwork/quest-dolphin-js)
 
 **0.9.4**
-- Uses [go-ipfs](https://github.com/ipfs/go-ipfs) from NodeJS and [js-ipfs](https://github.com/ipfs/js-ipfs) from Electron
-
-**0.9.6**
 - [Quest Coral Process](https://github.com/QuestNetwork/quest-coral-js)
 
+**0.9.6**
+- Uses [go-ipfs](https://github.com/ipfs/go-ipfs) from NodeJS/Electron and [js-ipfs](https://github.com/ipfs/js-ipfs) from the browser.
+
 ## Support Us
-This project is a lot of work, help us start a non profit for this project! (ツ)
+This project is a lot of work and unfortunately we need to eat food (ツ)
 
 | Ethereum| Bitcoin |
 |---|---|
